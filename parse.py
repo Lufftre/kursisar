@@ -14,7 +14,8 @@ class MyHTMLParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if self.parse and self.last_tag == "td" and tag == "table" and ('width', '222') in attrs:
-            self.blocks.append(self.block)
+            if self.block:
+                self.blocks.append(self.block)
             self.block = []
         if self.parse and tag == "tr":
             self.row = []
@@ -24,7 +25,8 @@ class MyHTMLParser(HTMLParser):
         try:
             if self.parse and tag == "tr" and len(self.row) == 3 and self.row[0] != b'Kurskod':
                 self.row = [x.decode('utf-8') for x in self.row]
-                self.block.append(self.row)
+                
+                self.block.append(self.row[:3])
                 #self.rows.append(self.row + [self.period, self.block])
         except AttributeError:
             pass
